@@ -14,6 +14,8 @@ import { Network, EventSystem } from '../../class/core/system/system';
 import { ObjectStore } from '../../class/core/synchronize-object/object-store';
 import { GameObject } from '../../class/core/synchronize-object/game-object';
 import { DataElement } from '../../class/data-element';
+import { ContextMenuService } from '../../service/context-menu.service';
+import { PointerDeviceService } from '../../service/pointer-device.service';
 
 @Component({
   selector: 'game-object-inventory',
@@ -35,7 +37,9 @@ export class GameObjectInventoryComponent {
     //private networkService: NetworkService,
     private viewContainerRef: ViewContainerRef,
     private modalService: ModalService,
-    private panelService: PanelService
+    private panelService: PanelService,
+    private contextMenuService: ContextMenuService,
+    private pointerDeviceService: PointerDeviceService
   ) { }
 
   ngOnInit() {
@@ -96,6 +100,25 @@ export class GameObjectInventoryComponent {
       }
     }
     return gameObjects;
+  }
+
+  private onContextMenu(e: Event, gameObject: TabletopObject) {
+    console.log('onContextMenu');
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.selectGameObject(gameObject);
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) { return; }
+
+    const potison = this.pointerDeviceService.pointers[0];
+    console.log('mouseCursor', potison);
+    this.contextMenuService.open(potison, [
+      { name: 'HP+10', action: () => { console.log('HP+10'); } },
+      { name: 'HP-10', action: () => { console.log('HP-10'); } },
+      { name: 'MP+10', action: () => { console.log('MP+10'); } },
+      { name: 'MP-10', action: () => { console.log('MP-10'); } },
+    ], gameObject.name);
   }
 
   private cloneGameObject(gameObject: TabletopObject) {

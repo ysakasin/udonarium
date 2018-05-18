@@ -110,6 +110,7 @@ export class GameObjectInventoryComponent {
     this.selectGameObject(gameObject);
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) { return; }
+    if (!(gameObject instanceof GameCharacter)) { return; }
 
     const potison = this.pointerDeviceService.pointers[0];
     console.log('mouseCursor', potison);

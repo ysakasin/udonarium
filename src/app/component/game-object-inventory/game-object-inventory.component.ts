@@ -142,8 +142,9 @@ export class GameObjectInventoryComponent {
       if (!dataElm.isNumberResource) {
         messageText = `${gameCharacter.name}の「${dataName}」はリソースではありません`;
       } else {
-        const beforeValue = <number>dataElm.currentValue;
-        dataElm.currentValue = beforeValue + valueDiff;
+        const beforeValue = dataElm.currentValue;
+        const beforeValueInt: number = (typeof beforeValue === 'string') ? Number.parseInt(beforeValue) : beforeValue;
+        dataElm.currentValue = beforeValueInt + valueDiff;
         messageText = `${gameCharacter.name}の${dataName}を${valueDiff}しました (${dataName}: ${beforeValue} -> ${dataElm.currentValue})`;
       }
     }

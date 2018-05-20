@@ -115,11 +115,29 @@ export class GameObjectInventoryComponent {
     const potison = this.pointerDeviceService.pointers[0];
     console.log('mouseCursor', potison);
     this.contextMenuService.open(potison, [
-      { name: 'HP+10', action: () => { console.log('HP+10'); } },
-      { name: 'HP-10', action: () => { console.log('HP-10'); } },
-      { name: 'MP+10', action: () => { console.log('MP+10'); } },
-      { name: 'MP-10', action: () => { console.log('MP-10'); } },
+      { name: 'HP+10', action: () => { this.changeNumberResource(gameObject, 'HP', 10); } },
+      { name: 'HP-10', action: () => { this.changeNumberResource(gameObject, 'HP', -10); } },
+      { name: 'MP+10', action: () => { this.changeNumberResource(gameObject, 'MP', 10); } },
+      { name: 'MP-10', action: () => { this.changeNumberResource(gameObject, 'MP', -10); } },
+      { name: '夢を渡す', action: () => { this.changeNumberResource(gameObject, '夢', 1); } },
+      { name: '器用度+1', action: () => { this.changeNumberResource(gameObject, '器用度', 1); } },
     ], gameObject.name);
+  }
+
+  private changeNumberResource(gameCharacter: GameCharacter, dataName: string, value: number ): void {
+    console.log('changeNumberResource');
+    const dataElements: DataElement[] = gameCharacter.detailDataElement.getElementsByName(dataName);
+    if (dataElements.length === 0) {
+      console.log(`${dataName}が存在しません`);
+      return;
+    }
+    const dataElm = dataElements[0];
+    if (!dataElm.isNumberResource) {
+      console.log(`${dataName}はリソースではありません`);
+      return;
+    }
+    dataElm.currentValue = <number>dataElm.currentValue + value;
+
   }
 
   private cloneGameObject(gameObject: TabletopObject) {

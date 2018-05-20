@@ -134,23 +134,26 @@ export class GameObjectInventoryComponent {
   private changeNumberResource(gameCharacter: GameCharacter, dataName: string, valueDiff: number, chatTabidentifier: string): void {
     console.log('changeNumberResource');
     const dataElements: DataElement[] = gameCharacter.detailDataElement.getElementsByName(dataName);
+    let messageText = '';
     if (dataElements.length === 0) {
-      console.log(`${dataName}が存在しません`);
-      return;
+      messageText = `${gameCharacter.name}に「${dataName}」が存在しません`;
+    } else {
+      const dataElm = dataElements[0];
+      if (!dataElm.isNumberResource) {
+        messageText = `${gameCharacter.name}の「${dataName}」はリソースではありません`;
+      } else {
+        const beforeValue = <number>dataElm.currentValue;
+        dataElm.currentValue = beforeValue + valueDiff;
+        messageText = `${gameCharacter.name}の${dataName}を${valueDiff}しました (${dataName}: ${beforeValue} -> ${dataElm.currentValue})`;
+      }
     }
-    const dataElm = dataElements[0];
-    if (!dataElm.isNumberResource) {
-      console.log(`${dataName}はリソースではありません`);
-      return;
-    }
-    dataElm.currentValue = <number>dataElm.currentValue + valueDiff;
 
     const time = this.chatMessageService.getTime();
     console.log('time:' + time);
     const chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
       name: this.myPeer.name,
-      text: `${dataName}を${valueDiff}しました`,
+      text: messageText,
       timestamp: time,
       tag: 'system',
       imageIdentifier: this.myPeer.imageIdentifier,

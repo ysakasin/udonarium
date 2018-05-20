@@ -16,6 +16,10 @@ import { GameObject } from '../../class/core/synchronize-object/game-object';
 import { DataElement } from '../../class/data-element';
 import { ContextMenuService } from '../../service/context-menu.service';
 import { PointerDeviceService } from '../../service/pointer-device.service';
+import { ChatMessageContext } from '../../class/chat-message';
+import { ChatMessageService } from '../../service/chat-message.service';
+import { ChatTab } from '../../class/chat-tab';
+import { PeerCursor } from '../../class/peer-cursor';
 
 @Component({
   selector: 'game-object-inventory',
@@ -31,6 +35,8 @@ export class GameObjectInventoryComponent {
   private selectedIdentifier: string = '';
   private networkService = Network;
 
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+
   constructor(
     private changeDetector: ChangeDetectorRef,
     //private gameRoomService: GameRoomService,
@@ -39,7 +45,8 @@ export class GameObjectInventoryComponent {
     private modalService: ModalService,
     private panelService: PanelService,
     private contextMenuService: ContextMenuService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private chatMessageService: ChatMessageService
   ) { }
 
   ngOnInit() {
@@ -115,16 +122,16 @@ export class GameObjectInventoryComponent {
     const potison = this.pointerDeviceService.pointers[0];
     console.log('mouseCursor', potison);
     this.contextMenuService.open(potison, [
-      { name: 'HP+10', action: () => { this.changeNumberResource(gameObject, 'HP', 10); } },
-      { name: 'HP-10', action: () => { this.changeNumberResource(gameObject, 'HP', -10); } },
-      { name: 'MP+10', action: () => { this.changeNumberResource(gameObject, 'MP', 10); } },
-      { name: 'MP-10', action: () => { this.changeNumberResource(gameObject, 'MP', -10); } },
-      { name: '夢を渡す', action: () => { this.changeNumberResource(gameObject, '夢', 1); } },
-      { name: '器用度+1', action: () => { this.changeNumberResource(gameObject, '器用度', 1); } },
+      { name: 'HP+10', action: () => { this.changeNumberResource(gameObject, 'HP', 10, ''); } },
+      { name: 'HP-10', action: () => { this.changeNumberResource(gameObject, 'HP', -10, ''); } },
+      { name: 'MP+10', action: () => { this.changeNumberResource(gameObject, 'MP', 10, ''); } },
+      { name: 'MP-10', action: () => { this.changeNumberResource(gameObject, 'MP', -10, ''); } },
+      { name: '夢を渡す', action: () => { this.changeNumberResource(gameObject, '夢', 1, ''); } },
+      { name: '器用度+1', action: () => { this.changeNumberResource(gameObject, '器用度', 1, ''); } },
     ], gameObject.name);
   }
 
-  private changeNumberResource(gameCharacter: GameCharacter, dataName: string, valueDiff: number ): void {
+  private changeNumberResource(gameCharacter: GameCharacter, dataName: string, valueDiff: number, chatTabidentifier: string): void {
     console.log('changeNumberResource');
     const dataElements: DataElement[] = gameCharacter.detailDataElement.getElementsByName(dataName);
     if (dataElements.length === 0) {
@@ -137,6 +144,27 @@ export class GameObjectInventoryComponent {
       return;
     }
     dataElm.currentValue = <number>dataElm.currentValue + valueDiff;
+
+    const time = this.chatMessageService.getTime();
+    console.log('time:' + time);
+    const chatMessage: ChatMessageContext = {
+      from: Network.peerContext.id,
+      name: this.myPeer.name,
+      text: `${dataName}を${valueDiff}しました`,
+      timestamp: time,
+      tag: 'system',
+      imageIdentifier: this.myPeer.imageIdentifier,
+      responseIdentifier: '',
+    };
+
+    let chatTab: ChatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
+    if (!chatTabidentifier) {
+      const chatTabs: ChatTab[] = this.chatMessageService.chatTabs;
+      if (chatTabs.length === 0) { return; }
+      chatTab = chatTabs[0];
+    }
+
+    if (chatTab) { chatTab.addMessage(chatMessage); }
   }
 
   private cloneGameObject(gameObject: TabletopObject) {

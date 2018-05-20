@@ -124,7 +124,7 @@ export class GameObjectInventoryComponent {
     ], gameObject.name);
   }
 
-  private changeNumberResource(gameCharacter: GameCharacter, dataName: string, value: number ): void {
+  private changeNumberResource(gameCharacter: GameCharacter, dataName: string, valueDiff: number ): void {
     console.log('changeNumberResource');
     const dataElements: DataElement[] = gameCharacter.detailDataElement.getElementsByName(dataName);
     if (dataElements.length === 0) {
@@ -136,8 +136,7 @@ export class GameObjectInventoryComponent {
       console.log(`${dataName}はリソースではありません`);
       return;
     }
-    dataElm.currentValue = <number>dataElm.currentValue + value;
-
+    dataElm.currentValue = <number>dataElm.currentValue + valueDiff;
   }
 
   private cloneGameObject(gameObject: TabletopObject) {

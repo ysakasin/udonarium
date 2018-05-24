@@ -1,0 +1,30 @@
+<div class="flex-container">
+  <div class="flex-item no-grow">
+    <div>
+      <button (click)="create()">リソースコントローラーを作る</button>
+    </div>
+    <select style="width: 10em;" size="10" (change)="onChangeSelectController($event.target.value)" [ngModel]="selectedController?.identifier">
+      <option *ngFor="let resourceController of resourceControllers" value="{{resourceController.identifier}}">{{resourceController.title}}</option>
+    </select>
+  </div>
+  <div class="flex-item">
+    <ng-container *ngIf="!isEmpty && selectedController">
+      <div>名前 :
+        <input [(ngModel)]="titleName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+      <hr/>
+      <div>
+        <ng-container *ngIf="!isDeleted">
+          <button (click)="save()">保存</button>
+          <button class="danger" (click)="delete()" [attr.disabled]="resourceControllers.length <= 1 ? '' : null">削除</button>
+        </ng-container>
+        <ng-container *ngIf="isDeleted">
+          <button (click)="restore()">元に戻す</button>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-container *ngIf="isEmpty">
+  <div style="font-size: 12px;">※リソースコントローラーが１つも作成されていません。「リソースコントローラーを作る」からリソースコントローラーを作成することができます。</div>
+</ng-container>

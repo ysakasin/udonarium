@@ -47,6 +47,7 @@ import { PointerDeviceService } from './service/pointer-device.service';
 import { TabletopService } from './service/tabletop.service';
 import { MovableDirective } from './directive/movable.directive';
 import { RotableDirective } from './directive/rotable.directive';
+import { ResourceControllerSettingComponent } from './component/resource-controller-setting/resource-controller-setting.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { RotableDirective } from './directive/rotable.directive';
     TextNoteComponent,
     MovableDirective,
     RotableDirective,
+    ResourceControllerSettingComponent,
   ],
   imports: [
     BrowserModule,
@@ -123,6 +125,7 @@ import { RotableDirective } from './directive/rotable.directive';
     RoomSettingComponent,
     TextViewComponent,
     TextNoteComponent,
+    ResourceControllerSettingComponent,
   ],
   bootstrap: [AppComponent]
 })

@@ -7,6 +7,7 @@ import { FileArchiver } from '../../class/core/file-storage/file-archiver';
 import { ResourceController } from '../../class/resource-controller';
 import { ModalService } from '../../service/modal.service';
 import { PanelService } from '../../service/panel.service';
+import { ChatMessageService } from '../../service/chat-message.service';
 
 @Component({
   selector: 'app-resource-controller-setting',
@@ -22,13 +23,26 @@ export class ResourceControllerSettingComponent implements OnInit {
   get titleName(): string { return this.selectedController.title; }
   set titleName(titleName: string) { if (this.isEditable) { this.selectedController.title = titleName; } }
 
+  get dataName(): string { return this.selectedController.dataName; }
+  set dataName(dataName: string) { if (this.isEditable) { this.selectedController.dataName = dataName; } }
+
+  get valueDiff(): number { return this.selectedController.valueDiff; }
+  set valueDiff(valueDiff: number) { if (this.isEditable) { this.selectedController.valueDiff = valueDiff; } }
+
+  get chatTabidentifier(): string { return this.selectedController.chatTabidentifier; }
+  set chatTabidentifier(chatTabidentifier: string) { if (this.isEditable) { this.selectedController.chatTabidentifier = chatTabidentifier; } }
+
+  get messageTemplate(): string { return this.selectedController.messageTemplate; }
+  set messageTemplate(messageTemplate: string) { if (this.isEditable) { this.selectedController.messageTemplate = messageTemplate; } }
+
   get isEmpty(): boolean { return this.resourceControllers.length < 1; }
   get isDeleted(): boolean { return this.selectedController ? ObjectStore.instance.get(this.selectedController.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
   constructor(
     private modalService: ModalService,
-    private panelService: PanelService
+    private panelService: PanelService,
+    public chatMessageService: ChatMessageService,
   ) {}
 
   ngOnInit() {
@@ -43,7 +57,11 @@ export class ResourceControllerSettingComponent implements OnInit {
   create() {
     console.log('resourceController create');
     const resourceController = new ResourceController();
-    resourceController.title = 'コントローラー';
+    resourceController.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+    resourceController.title = 'HP回復';
+    resourceController.dataName = 'HP';
+    resourceController.valueDiff = 1;
+    resourceController.messageTemplate = '{0}の{1}を{3}回復{4}';
     resourceController.initialize();
     this.selectedController = resourceController;
   }

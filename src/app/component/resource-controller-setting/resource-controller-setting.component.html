@@ -13,10 +13,22 @@
         <input [(ngModel)]="titleName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
       <hr/>
+      <select [(ngModel)]="chatTabidentifier" [ngModelOptions]="{standalone: true}">
+        <option *ngFor="let chatTab of chatMessageService.chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+      </select>
+      <div>リソース :
+        <input [(ngModel)]="dataName" placeholder="resource" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+      <div>修正値 :
+        <input [(ngModel)]="valueDiff" placeholder="value" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+      <div>表示メッセージ :
+        <input [(ngModel)]="messageTemplate" placeholder="表示メッセージ" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
       <div>
         <ng-container *ngIf="!isDeleted">
           <button (click)="save()">保存</button>
-          <button class="danger" (click)="delete()" [attr.disabled]="resourceControllers.length <= 1 ? '' : null">削除</button>
+          <button class="danger" (click)="delete()" [attr.disabled]="resourceControllers.length <= 0 ? '' : null">削除</button>
         </ng-container>
         <ng-container *ngIf="isDeleted">
           <button (click)="restore()">元に戻す</button>

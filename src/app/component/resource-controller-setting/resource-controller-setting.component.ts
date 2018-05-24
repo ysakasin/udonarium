@@ -1,6 +1,9 @@
+import * as Beautify from 'vkbeautify';
+
 import { Component, OnInit } from '@angular/core';
 import { ObjectStore } from '../../class/core/synchronize-object/object-store';
 import { ObjectSerializer } from '../../class/core/synchronize-object/object-serializer';
+import { FileArchiver } from '../../class/core/file-storage/file-archiver';
 import { ResourceController } from '../../class/resource-controller';
 import { ModalService } from '../../service/modal.service';
 import { PanelService } from '../../service/panel.service';
@@ -25,8 +28,8 @@ export class ResourceControllerSettingComponent implements OnInit {
 
   constructor(
     private modalService: ModalService,
-    private panelService: PanelService,
-  ) { }
+    private panelService: PanelService
+  ) {}
 
   ngOnInit() {
     this.modalService.title = this.panelService.title = 'リソースコントローラー設定';
@@ -45,6 +48,17 @@ export class ResourceControllerSettingComponent implements OnInit {
     this.selectedController = resourceController;
   }
 
+  save() {
+    if (!this.selectedController) { return; }
+    let xml = this.selectedController.toXml();
+
+    xml = Beautify.xml(xml, 2);
+    console.log(xml);
+
+    const files: File[] = [new File([xml], 'data.xml', { type: 'text/plain' })];
+    FileArchiver.instance.save(files, 'resourceController_' + this.selectedController.title);
+  }
+
   delete() {
     if (!this.isEmpty && this.selectedController) {
       this.selectedControllerXml = this.selectedController.toXml();
@@ -58,5 +72,4 @@ export class ResourceControllerSettingComponent implements OnInit {
       this.selectedControllerXml = '';
     }
   }
-
 }

@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ObjectStore } from '../../class/core/synchronize-object/object-store';
 import { ObjectSerializer } from '../../class/core/synchronize-object/object-serializer';
 import { FileArchiver } from '../../class/core/file-storage/file-archiver';
-import { ResourceController } from '../../class/resource-controller';
+import { ResourceController, Handler } from '../../class/resource-controller';
 import { ModalService } from '../../service/modal.service';
 import { PanelService } from '../../service/panel.service';
 import { ChatMessageService } from '../../service/chat-message.service';
@@ -16,6 +16,7 @@ import { GameCharacter } from '../../class/game-character';
   styleUrls: ['./resource-controller-setting.component.css']
 })
 export class ResourceControllerSettingComponent implements OnInit {
+  private readonly handleType = Handler;
   private selectedController: ResourceController = null;
   private selectedControllerXml = '';
 
@@ -29,6 +30,9 @@ export class ResourceControllerSettingComponent implements OnInit {
 
   get dataName(): string { return this.selectedController.dataName; }
   set dataName(dataName: string) { if (this.isEditable) { this.selectedController.dataName = dataName; } }
+
+  get handler(): Handler { return this.selectedController.handler; }
+  set handler(handler: Handler) { if (this.isEditable) { this.selectedController.handler = handler; } }
 
   get valueDiff(): number { return this.selectedController.valueDiff; }
   set valueDiff(valueDiff: number) { if (this.isEditable) { this.selectedController.valueDiff = valueDiff; } }
@@ -64,6 +68,7 @@ export class ResourceControllerSettingComponent implements OnInit {
     resourceController.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
     resourceController.title = 'HP回復';
     resourceController.dataName = 'HP';
+    resourceController.handler = Handler.PLUS;
     resourceController.valueDiff = 1;
     resourceController.messageTemplate = '{0}の{1}を{3}回復{4}';
     resourceController.initialize();

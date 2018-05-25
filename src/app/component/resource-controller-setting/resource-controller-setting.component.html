@@ -20,6 +20,11 @@
         <input [(ngModel)]="dataName" placeholder="resource" [attr.disabled]="!isEditable ? '' : null" />
       </div>
       <div>修正値 :
+        <select [(ngModel)]="handler" [attr.disabled]="!isEditable ? '' : null">
+          <option value="{{handleType.PLUS}}">{{handleType.PLUS}}</option>
+          <option value="{{handleType.MINUS}}">{{handleType.MINUS}}</option>
+          <option value="{{handleType.EQUAL}}">{{handleType.EQUAL}}</option>
+        </select>
         <input [(ngModel)]="valueDiff" placeholder="value" [attr.disabled]="!isEditable ? '' : null" />
       </div>
       <div>表示メッセージ :

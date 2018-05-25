@@ -8,6 +8,7 @@ import { ResourceController } from '../../class/resource-controller';
 import { ModalService } from '../../service/modal.service';
 import { PanelService } from '../../service/panel.service';
 import { ChatMessageService } from '../../service/chat-message.service';
+import { GameCharacter } from '../../class/game-character';
 
 @Component({
   selector: 'app-resource-controller-setting',
@@ -18,7 +19,10 @@ export class ResourceControllerSettingComponent implements OnInit {
   private selectedController: ResourceController = null;
   private selectedControllerXml = '';
 
+  private selectedCharacter: GameCharacter = null;
+
   get resourceControllers(): ResourceController[] { return ObjectStore.instance.getObjects(ResourceController); }
+  get gameCharacters(): GameCharacter[] { return ObjectStore.instance.getObjects(GameCharacter); }
 
   get titleName(): string { return this.selectedController.title; }
   set titleName(titleName: string) { if (this.isEditable) { this.selectedController.title = titleName; } }
@@ -89,5 +93,13 @@ export class ResourceControllerSettingComponent implements OnInit {
       const restoreController = ObjectSerializer.instance.parseXml(this.selectedControllerXml);
       this.selectedControllerXml = '';
     }
+  }
+
+  selectGameCharacter(identifier: string) {
+    this.selectedCharacter = ObjectStore.instance.get<GameCharacter>(identifier);
+  }
+
+  send() {
+    console.log('TODO:リソースカウンターの適用処理');
   }
 }

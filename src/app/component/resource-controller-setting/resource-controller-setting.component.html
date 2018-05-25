@@ -34,6 +34,14 @@
           <button (click)="restore()">元に戻す</button>
         </ng-container>
       </div>
+      <hr/>
+      <div>
+        <img *ngIf="selectedCharacter && selectedCharacter.imageFile" height="50" [src]="selectedCharacter.imageFile.url | safe: 'resourceUrl'" />
+      </div>
+      <select [(ngModel)]="characterIdentifier" (change)="selectGameCharacter($event.target.value)" [ngModelOptions]="{standalone: true}">
+        <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
+      </select>
+      <button (click)="send()" [attr.disabled]="!isEditable || !selectedCharacter ? '' : null">送信</button>
     </ng-container>
   </div>
 </div>

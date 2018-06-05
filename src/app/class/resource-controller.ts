@@ -5,21 +5,21 @@ import { DataElement } from './data-element';
 
 @SyncObject('resource-controller')
 export class ResourceController extends ObjectNode {
-  @SyncVar() title: string;
-  @SyncVar() gameCharacter: GameCharacter;
+  @SyncVar() titleName: string;
+  // @SyncVar() gameCharacter: GameCharacter;
   @SyncVar() dataName: string;
   @SyncVar() handler: Handler;
   @SyncVar() valueDiff: number;
-  @SyncVar() chatTabidentifier: string;
+  // @SyncVar() chatTabidentifier: string;
   @SyncVar() messageTemplate: string;
 
-  getMessage(): string {
-    const dataElm = this.getDataElementByName();
+  getMessage(gameCharacter: GameCharacter): string {
+    const dataElm = this.getDataElementByName(gameCharacter);
     if (dataElm === null) {
-      return `${this.gameCharacter.name}に「${this.dataName}」が存在しません`;
+      return `${gameCharacter.name}に「${this.dataName}」が存在しません`;
     }
     if (!dataElm.isNumberResource) {
-      return `${this.gameCharacter.name}の「${this.dataName}」はリソースではありません`;
+      return `${gameCharacter.name}の「${this.dataName}」はリソースではありません`;
     }
     const beforeValue = dataElm.currentValue;
     switch (this.handler) {
@@ -33,11 +33,11 @@ export class ResourceController extends ObjectNode {
         dataElm.currentValue = this.valueDiff;
         break;
     }
-    return this.formatMessageTemplate(beforeValue, dataElm.currentValue);
+    return this.formatMessageTemplate(gameCharacter, beforeValue, dataElm.currentValue);
   }
 
-  private getDataElementByName(): DataElement {
-    const dataElements: DataElement[] = this.gameCharacter.detailDataElement.getElementsByName(this.dataName);
+  private getDataElementByName(gameCharacter: GameCharacter): DataElement {
+    const dataElements: DataElement[] = gameCharacter.detailDataElement.getElementsByName(this.dataName);
     if (dataElements.length === 0) {
       return null;
     }
@@ -50,12 +50,12 @@ export class ResourceController extends ObjectNode {
     return lNumber + rValue;
   }
 
-  private formatMessageTemplate(beforeValue: string | number, afterValue: number): string {
+  private formatMessageTemplate(gameCharacter: GameCharacter, beforeValue: string | number, afterValue: number): string {
     if (!this.messageTemplate) {
       return '';
     }
     return this.messageTemplate
-      .replace('{0}', this.gameCharacter.name)
+      .replace('{0}', gameCharacter.name)
       .replace('{1}', this.dataName)
       .replace('{2}', this.handler + this.valueDiff.toString())
       .replace('{3}', Math.abs(this.valueDiff).toString())

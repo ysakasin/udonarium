@@ -16,17 +16,18 @@ import { GameCharacter } from '../../class/game-character';
   styleUrls: ['./resource-controller-setting.component.css']
 })
 export class ResourceControllerSettingComponent implements OnInit {
-  private readonly handleType = Handler;
-  private selectedController: ResourceController = null;
+  readonly handleType = Handler;
+  selectedController: ResourceController = null;
   private selectedControllerXml = '';
 
+  chatTabidentifier = '';
   private selectedCharacter: GameCharacter = null;
 
   get resourceControllers(): ResourceController[] { return ObjectStore.instance.getObjects(ResourceController); }
   get gameCharacters(): GameCharacter[] { return ObjectStore.instance.getObjects(GameCharacter); }
 
-  get titleName(): string { return this.selectedController.title; }
-  set titleName(titleName: string) { if (this.isEditable) { this.selectedController.title = titleName; } }
+  get titleName(): string { return this.selectedController.titleName; }
+  set titleName(titleName: string) { if (this.isEditable) { this.selectedController.titleName = titleName; } }
 
   get dataName(): string { return this.selectedController.dataName; }
   set dataName(dataName: string) { if (this.isEditable) { this.selectedController.dataName = dataName; } }
@@ -37,8 +38,8 @@ export class ResourceControllerSettingComponent implements OnInit {
   get valueDiff(): number { return this.selectedController.valueDiff; }
   set valueDiff(valueDiff: number) { if (this.isEditable) { this.selectedController.valueDiff = valueDiff; } }
 
-  get chatTabidentifier(): string { return this.selectedController.chatTabidentifier; }
-  set chatTabidentifier(chatTabidentifier: string) { if (this.isEditable) { this.selectedController.chatTabidentifier = chatTabidentifier; } }
+  // get chatTabidentifier(): string { return this.chatTabidentifier; }
+  // set chatTabidentifier(chatTabidentifier: string) { if (this.isEditable) { this.chatTabidentifier = chatTabidentifier; } }
 
   get messageTemplate(): string { return this.selectedController.messageTemplate; }
   set messageTemplate(messageTemplate: string) { if (this.isEditable) { this.selectedController.messageTemplate = messageTemplate; } }
@@ -55,6 +56,7 @@ export class ResourceControllerSettingComponent implements OnInit {
 
   ngOnInit() {
     this.modalService.title = this.panelService.title = 'リソースコントローラー設定';
+    this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
   }
 
   onChangeSelectController(identifier: string) {
@@ -65,8 +67,8 @@ export class ResourceControllerSettingComponent implements OnInit {
   create() {
     console.log('resourceController create');
     const resourceController = new ResourceController();
-    resourceController.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
-    resourceController.title = 'HP回復';
+    // resourceController.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+    resourceController.titleName = 'HP回復';
     resourceController.dataName = 'HP';
     resourceController.handler = Handler.PLUS;
     resourceController.valueDiff = 1;
@@ -83,7 +85,7 @@ export class ResourceControllerSettingComponent implements OnInit {
     console.log(xml);
 
     const files: File[] = [new File([xml], 'data.xml', { type: 'text/plain' })];
-    FileArchiver.instance.save(files, 'resourceController_' + this.selectedController.title);
+    FileArchiver.instance.save(files, 'resourceController_' + this.selectedController.titleName);
   }
 
   delete() {

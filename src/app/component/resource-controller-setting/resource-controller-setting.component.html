@@ -4,7 +4,7 @@
       <button (click)="create()">リソースコントローラーを作る</button>
     </div>
     <select style="width: 10em;" size="10" (change)="onChangeSelectController($event.target.value)" [ngModel]="selectedController?.identifier">
-      <option *ngFor="let resourceController of resourceControllers" value="{{resourceController.identifier}}">{{resourceController.title}}</option>
+      <option *ngFor="let resourceController of resourceControllers" value="{{resourceController.identifier}}">{{resourceController.titleName}}</option>
     </select>
   </div>
   <div class="flex-item">
@@ -13,9 +13,6 @@
         <input [(ngModel)]="titleName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
       <hr/>
-      <select [(ngModel)]="chatTabidentifier" [ngModelOptions]="{standalone: true}">
-        <option *ngFor="let chatTab of chatMessageService.chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
-      </select>
       <div>リソース :
         <input [(ngModel)]="dataName" placeholder="resource" [attr.disabled]="!isEditable ? '' : null" />
       </div>
@@ -45,6 +42,9 @@
       </div>
       <select [(ngModel)]="characterIdentifier" (change)="selectGameCharacter($event.target.value)" [ngModelOptions]="{standalone: true}">
         <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
+      </select>
+      <select [(ngModel)]="chatTabidentifier" [ngModelOptions]="{standalone: true}">
+        <option *ngFor="let chatTab of chatMessageService.chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
       </select>
       <button (click)="send()" [attr.disabled]="!isEditable || !selectedCharacter ? '' : null">送信</button>
     </ng-container>

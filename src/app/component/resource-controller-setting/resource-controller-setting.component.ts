@@ -9,6 +9,10 @@ import { ModalService } from '../../service/modal.service';
 import { PanelService } from '../../service/panel.service';
 import { ChatMessageService } from '../../service/chat-message.service';
 import { GameCharacter } from '../../class/game-character';
+import { ChatTab } from '../../class/chat-tab';
+import { Network } from '../../class/core/system/system';
+import { ChatMessageContext } from '../../class/chat-message';
+import { PeerCursor } from '../../class/peer-cursor';
 
 @Component({
   selector: 'app-resource-controller-setting',
@@ -22,6 +26,8 @@ export class ResourceControllerSettingComponent implements OnInit {
 
   chatTabidentifier = '';
   private selectedCharacter: GameCharacter = null;
+
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   get resourceControllers(): ResourceController[] { return ObjectStore.instance.getObjects(ResourceController); }
   get gameCharacters(): GameCharacter[] { return ObjectStore.instance.getObjects(GameCharacter); }
@@ -107,6 +113,28 @@ export class ResourceControllerSettingComponent implements OnInit {
   }
 
   send() {
-    console.log('TODO:リソースカウンターの適用処理');
+    console.log('changeNumberResource');
+    const messageText = this.selectedController.getMessage(this.selectedCharacter);
+
+    const time = this.chatMessageService.getTime();
+    console.log('time:' + time);
+    const chatMessage: ChatMessageContext = {
+      from: Network.peerContext.id,
+      name: this.myPeer.name,
+      text: messageText,
+      timestamp: time,
+      tag: 'system',
+      imageIdentifier: this.myPeer.imageIdentifier,
+      responseIdentifier: '',
+    };
+
+    let chatTab: ChatTab = ObjectStore.instance.get<ChatTab>(this.chatTabidentifier);
+    if (!this.chatTabidentifier) {
+      const chatTabs: ChatTab[] = this.chatMessageService.chatTabs;
+      if (chatTabs.length === 0) { return; }
+      chatTab = chatTabs[0];
+    }
+
+    if (chatTab) { chatTab.addMessage(chatMessage); }
   }
 }

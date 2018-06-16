@@ -20,6 +20,7 @@ import { ChatMessageContext } from '../../class/chat-message';
 import { ChatMessageService } from '../../service/chat-message.service';
 import { ChatTab } from '../../class/chat-tab';
 import { PeerCursor } from '../../class/peer-cursor';
+import { ResourceControllerSettingComponent } from '../resource-controller-setting/resource-controller-setting.component';
 
 @Component({
   selector: 'game-object-inventory',
@@ -128,6 +129,7 @@ export class GameObjectInventoryComponent {
       { name: 'MP-10', action: () => { this.changeNumberResource(gameObject, 'MP', -10, ''); } },
       { name: '夢を渡す', action: () => { this.changeNumberResource(gameObject, '夢', 1, ''); } },
       { name: '器用度+1', action: () => { this.changeNumberResource(gameObject, '器用度', 1, ''); } },
+      { name: '設定を表示', action: () => { this.showResourceController(); } },
     ], gameObject.name);
   }
 
@@ -200,5 +202,10 @@ export class GameObjectInventoryComponent {
       }
     }
     return false;
+  }
+
+  private showResourceController() {
+    const option: PanelOption = { left: 0, top: 0, width: 800, height: 600 };
+    const component = this.panelService.open<ResourceControllerSettingComponent>(ResourceControllerSettingComponent, option);
   }
 }

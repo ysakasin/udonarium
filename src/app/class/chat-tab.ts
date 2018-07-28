@@ -37,7 +37,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   addMessage(message: ChatMessageContext) {
     message.tabIdentifier = this.identifier;
-    EventSystem.call('BROADCAST_MESSAGE', message);
+    console.log('TRIGGER_DICEBOT', message);
+    EventSystem.call('TRIGGER_DICEBOT', message);
   }
 
   innerXml(): string {

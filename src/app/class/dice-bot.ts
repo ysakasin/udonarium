@@ -281,11 +281,11 @@ export class DiceBot extends GameObject {
     //DiceBot.queue.add(() => DiceBot.loadScriptAsync('./assets/bcdice.js'));
     DiceBot.queue.add(() => DiceBot.loadScriptAsync('./assets/cgiDiceBot.js'));
     EventSystem.register(this)
-      .on<ChatMessageContext>('BROADCAST_MESSAGE', 100, async event => {
+      .on<ChatMessageContext>('TRIGGER_DICEBOT', 100, async event => {
         if (!event.isSendFromSelf) return;
-        let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.identifier);
-        if (!chatMessage || chatMessage.isSystem) return;
-        console.log('BROADCAST_MESSAGE DiceBot...?');
+        const chatMessage = event.data;
+        // if (!chatMessage || chatMessage.isSystem) return;
+        console.log('TRIGGER_DICEBOT DiceBot...?');
         let text: string = chatMessage.text;
 
         text = text.replace(/[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝]/g, function (s) {
@@ -304,11 +304,15 @@ export class DiceBot extends GameObject {
       });
   }
 
-  private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
+  private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessageContext) {
     let result: string = rollResult.result;
     let isSecret: boolean = rollResult.isSecret;
 
-    if (result.length < 1) return;
+    EventSystem.call('BROADCAST_MESSAGE', originalMessage);
+    if (result.length < 1) {
+      // EventSystem.call('BROADCAST_MESSAGE', originalMessage);
+      return;
+    }
 
     result = result.replace(/[＞]/g, function (s) {
       return '→';

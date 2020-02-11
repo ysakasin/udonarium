@@ -123,12 +123,13 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   clickPalette(line: string) {
-    if (this.doubleClickTimer && this.text === line) {
+    const text = this.palette.evaluate(line, this.character.rootDataElement);
+    if (this.doubleClickTimer && this.text === text) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
       this.sendChat(null);
     } else {
-      this.text = line;
+      this.text = text;
       let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
       textArea.value = this.text;
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);

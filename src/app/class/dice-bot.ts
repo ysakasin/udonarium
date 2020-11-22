@@ -25,6 +25,7 @@ export class DiceBot extends GameObject {
   private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
 
   public static diceBotInfos: DiceBotInfo[] = [
+    { script: 'RuinBreakers', game: 'ルーインブレイカーズ' },
     { script: 'EarthDawn', game: 'アースドーン' },
     { script: 'EarthDawn3', game: 'アースドーン3版' },
     { script: 'EarthDawn4', game: 'アースドーン4版' },
@@ -182,6 +183,7 @@ export class DiceBot extends GameObject {
     { script: 'GoldenSkyStories', game: 'ゆうやけこやけ' },
     { script: 'Ryutama', game: 'りゅうたま' },
     { script: 'RyuTuber', game: 'リューチューバーとちいさな奇跡' },
+    { script: 'RuinBreakers', game: 'ルーインブレイカーズ' },
     { script: 'RuneQuest', game: 'ルーンクエスト' },
     { script: 'RecordOfSteam', game: 'Record of Steam' },
     { script: 'RecordOfLodossWar', game: 'ロードス島戦記RPG' },

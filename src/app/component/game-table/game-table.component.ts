@@ -245,7 +245,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.viewPotisonY += transformY;
     this.viewPotisonZ += transformZ;
 
-    this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) ';
+    this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateZ(' + this.viewRotateZ + 'deg) ';
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
